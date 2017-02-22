@@ -6,7 +6,26 @@ import SensorType from '../types/SensorType'
 
 import './Sensor.css'
 
-const Sensor = ({id, name, type, data, noSensor}) => {
+class Sensor extends React.Component {
+
+  constructor(props) {
+    super(props);
+  }
+
+  componentDidMount() {
+    console.log('Component DID MOUNT!')
+  }
+
+  componentWillUnmount(){
+    console.log('Will be suppressed');
+  }
+
+  componentDidUpdate(){
+    console.log('UPDATED');
+    console.log(this.props.data[0]);
+  }
+
+render(){
   const unit = (type) => {
     const units = {}
     units[SensorType.TEMPERATURE] = "°C"
@@ -23,24 +42,21 @@ const Sensor = ({id, name, type, data, noSensor}) => {
       default : return v;
     }
   }
-  const values = data.map(((datum,index) => (<tr key={index}><td>{value(datum, type)+" "+unit(type)}</td></tr>)));
-  if(noSensor) {
+  /*const values = this.props.data.map(((datum,index) => (<tr key={index}><td>{value(datum, this.props.type)+" "+unit(this.props.type)}</td></tr>)));
+  if(this.props.noSensor) {
     return (<div className="Sensor">nope</div>)
-  }
+  }*/
   return (
     <div className="Sensor">
       <h1>{name}</h1>
 
       <h3>Valeur actuelle</h3>
-      <p> <span className="badge">{value(data.slice(-1), type)+" "+unit(type)}</span></p>
+      <p> <span className="badge">{value(this.props.data.slice(-1), this.props.type)+" "+unit(this.props.type)}</span></p>
       <h3>Historique</h3>
-      <table>
-        <tbody>
-          {values}
-        </tbody>
-      </table>
+      <svg width="800" height="200"></svg>
     </div>
   )
+}
 }
 export default connect(
     (state, ownProp) => {

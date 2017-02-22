@@ -28,7 +28,7 @@ const onMessageArrived = (topic, message) => {
 }
 
 
-SensorClient.connect =  (url= 'ws://localhost:4080') => {
+SensorClient.connect =  (url= 'ws://172.18.0.1:8080') => {
   if(client != null) {
     client.end(true);
   }
