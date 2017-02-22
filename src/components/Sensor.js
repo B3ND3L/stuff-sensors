@@ -15,46 +15,7 @@ class Sensor extends React.Component {
   }
 
   componentDidMount() {
-
     console.log('Component DID MOUNT!')
-    // define dimensions of graph
-    var m = [80, 80, 80, 80]; // margins
-    var w = 800 - m[1] - m[3]; // width
-    var h = 200 - m[0] - m[2]; // height
-
-    //var data = [0,1,2,3,2,1,2,3,2,1]
-    var data = []
-    var x = d3.scaleLinear().domain([0, data.length]).range([0, w]);
-    var mi = 800;
-    var ma = 0;
-    for (var i =0; i < data.length; i++){
-      mi = Math.min(mi,data[i]);
-      ma = Math.max(ma,data[i]);
-    }
-    var y = d3.scaleLinear().domain([mi, ma]).range([h, 0]);
-
-    var line = d3.line()
-      .x(function(d,i) {
-        return x(i);
-      })
-      .y(function(d) {
-        return y(d);
-      })
-
-      var graph = d3.select("svg")
-            .attr("width", w + m[1] + m[3])
-            .attr("height", h + m[0] + m[2])
-          .append("svg:g")
-            .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
-
-      var yAxisLeft = d3.axisLeft().scale(y);
-
-      graph.append("svg:g")
-            .attr("class", "y axis")
-            .attr("transform", "translate(-25,0)")
-            .call(yAxisLeft);
-
-        graph.append("svg:path").attr("d", line(data));
   }
 
   componentWillUnmount(){
@@ -65,9 +26,9 @@ class Sensor extends React.Component {
     console.log('UPDATED');
 
     if(! this.props.noSensor) {
-      if(this.props.type === SensorType.TEMPERATURE){
+      if(this.props.type === SensorType.TEMPERATURE || this.props.type === SensorType.PERCENT){
 
-        var m = [80, 80, 80, 80]; // margins
+        var m = [10, 80, 10, 80]; // margins
         var w = 800 - m[1] - m[3]; // width
         var h = 200 - m[0] - m[2]; // height
 
@@ -92,8 +53,6 @@ class Sensor extends React.Component {
           })
 
           var graph = d3.select("svg")
-                .attr("width", w + m[1] + m[3])
-                .attr("height", h + m[0] + m[2])
               .append("svg:g")
                 .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
@@ -105,6 +64,29 @@ class Sensor extends React.Component {
                 .call(yAxisLeft);
 
             graph.append("svg:path").attr("d", line(data));
+      } else {
+          var data = this.props.data;
+          var circles = [];
+          d3.selectAll("svg > *").remove();
+          for (var i=0; i<data.length;i++){
+            if (data[i] === 'ON'){
+              circles.push({'x_axis': i*60+25, 'y_axis':100, 'radius': 20, 'color':'green'});
+            } else {
+              circles.push({'x_axis': i*60+25, 'y_axis':100, 'radius': 20, 'color':'red'});
+            }
+          }
+          var svg = d3.select("svg")
+
+          var DrawnCircles = svg.selectAll("circle")
+          .data(circles)
+          .enter()
+          .append("circle");
+
+          var circleAttributes = DrawnCircles
+          .attr("cx", function (d) { return d.x_axis; })
+          .attr("cy", function (d) { return d.y_axis; })
+          .attr("r", function (d) { return d.radius; })
+          .style("fill", function(d) { return d.color; });
       }
     }
   }
