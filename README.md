@@ -1,5 +1,5 @@
 # Internet of stuff
+Fork of Internet of stuff : https://github.com/pigne/stuff-sensors
 
-Web development Lab @ university of Le Havre
+Ce projet et la suite d'un premier projet consultable à https://github.com/B3ND3L/LabReactRouter
 
-This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
